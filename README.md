@@ -54,6 +54,7 @@ O container da API roda as migrations (Better Auth + domínio) automaticamente a
 - `POST /api/auth/sign-in/email` — login.
 - Demais rotas expostas pelo Better Auth ficam sob o prefixo `/api/auth/*` (ver [documentação](https://www.better-auth.com/docs)).
 - `GET /turnos` — rota privada, exige sessão autenticada e `role` `SUPERVISOR` (401 sem sessão, 403 se for `EMPLOYEE`). Lista todos os turnos via `ListarTurnosUseCase`.
+- `POST /turnos` — rota privada, só `SUPERVISOR` (401/403 iguais à rota acima). Corpo: `{ data, horaInicio, horaFim, funcionarioId }` (todos obrigatórios). Cria o turno via `CriarTurnoUseCase` e retorna 201; erro de validação de negócio (ex.: horário inválido) retorna 400.
 - `GET /turnos/me?data=YYYY-MM-DD` — rota privada, exige sessão autenticada (qualquer `role`). Lista os turnos do próprio usuário logado (`funcionarioId` vem da sessão, nunca da query) na data informada, via `ListarTurnosPorFuncionarioEDataUseCase`. Retorna 400 se `data` não for informado.
 
 ## Domínio (biblioteca [`shift-swap`](https://github.com/macndesign/shift-swap))
@@ -62,7 +63,7 @@ As regras de negócio de troca de turnos vêm da lib `shift-swap` (entidades, us
 
 No signup, um hook do Better Auth (`databaseHooks.user.create.after` em [src/lib/auth.ts](src/lib/auth.ts)) chama `CriarSupervisorUseCase` ou `CriarFuncionarioUseCase` de acordo com o `role` escolhido, reaproveitando o mesmo `id` do usuário autenticado — então `FuncionarioEntity.id === user.id` (ou `SupervisorEntity.id === user.id`), sem tabela de vínculo extra. As tabelas `funcionario`/`supervisor` (schema em [src/db/schema.sql](src/db/schema.sql)) referenciam `user.id` com `ON DELETE CASCADE`.
 
-A tabela `turno` (schema em [src/db/schema.sql](src/db/schema.sql)) referencia `funcionario.id`. Os demais use-cases da lib (criação de turno, solicitações de troca) ainda não têm rotas na API — só signup e `GET /turnos` foram conectados até aqui.
+A tabela `turno` (schema em [src/db/schema.sql](src/db/schema.sql)) referencia `funcionario.id`. Os use-cases de solicitação de troca ainda não têm rotas na API.
 
 ## Integração com o frontend
 

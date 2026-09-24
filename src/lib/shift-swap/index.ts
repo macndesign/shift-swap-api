@@ -1,6 +1,7 @@
 import {
   CriarFuncionarioUseCase,
   CriarSupervisorUseCase,
+  CriarTurnoUseCase,
   ListarTurnosPorFuncionarioEDataUseCase,
   ListarTurnosUseCase,
 } from "shift-swap";
@@ -17,3 +18,4 @@ export const criarFuncionario = new CriarFuncionarioUseCase(funcionarioRepositor
 export const criarSupervisor = new CriarSupervisorUseCase(supervisorRepository);
 export const listarTurnos = new ListarTurnosUseCase(turnoRepository);
 export const listarTurnosPorFuncionarioEData = new ListarTurnosPorFuncionarioEDataUseCase(turnoRepository);
+export const criarTurno = new CriarTurnoUseCase(turnoRepository);
