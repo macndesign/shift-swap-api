@@ -2,7 +2,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { auth } from "./lib/auth";
 import { requireAuth, requireSupervisor } from "./lib/session-middleware";
-import { listarTurnos } from "./lib/shift-swap";
+import { listarTurnos, listarTurnosPorFuncionarioEData } from "./lib/shift-swap";
+import { toTurnoDTO } from "./lib/shift-swap/dto";
 
 const port = Number(process.env.PORT ?? 3000);
 
@@ -34,15 +35,27 @@ app.get("/turnos", requireAuth, requireSupervisor, async (c) => {
     return c.json({ error: result.error }, 500);
   }
 
-  const turnos = result.getValue().map((turno) => ({
-    id: turno.id,
-    data: turno.data,
-    horaInicio: turno.horaInicio,
-    horaFim: turno.horaFim,
-    funcionarioId: turno.funcionarioId,
-  }));
+  return c.json({ turnos: result.getValue().map(toTurnoDTO) });
+});
 
-  return c.json({ turnos });
+app.get("/turnos/me", requireAuth, async (c) => {
+  const data = c.req.query("data");
+
+  if (!data) {
+    return c.json({ error: "Query param 'data' is required" }, 400);
+  }
+
+  const session = c.get("session");
+  const result = await listarTurnosPorFuncionarioEData.execute({
+    funcionarioId: session.user.id,
+    data,
+  });
+
+  if (result.isFailure) {
+    return c.json({ error: result.error }, 500);
+  }
+
+  return c.json({ turnos: result.getValue().map(toTurnoDTO) });
 });
 
 console.log(`shift-swap-api listening on port ${port}`);

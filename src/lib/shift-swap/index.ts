@@ -1,4 +1,9 @@
-import { CriarFuncionarioUseCase, CriarSupervisorUseCase, ListarTurnosUseCase } from "shift-swap";
+import {
+  CriarFuncionarioUseCase,
+  CriarSupervisorUseCase,
+  ListarTurnosPorFuncionarioEDataUseCase,
+  ListarTurnosUseCase,
+} from "shift-swap";
 import { pool } from "../db";
 import { PgFuncionarioRepository } from "./funcionario.repository";
 import { PgSupervisorRepository } from "./supervisor.repository";
@@ -11,3 +16,4 @@ const turnoRepository = new PgTurnoRepository(pool);
 export const criarFuncionario = new CriarFuncionarioUseCase(funcionarioRepository);
 export const criarSupervisor = new CriarSupervisorUseCase(supervisorRepository);
 export const listarTurnos = new ListarTurnosUseCase(turnoRepository);
+export const listarTurnosPorFuncionarioEData = new ListarTurnosPorFuncionarioEDataUseCase(turnoRepository);
