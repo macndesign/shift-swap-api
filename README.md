@@ -28,7 +28,15 @@ API de troca de plantões com autenticação via [Better Auth](https://www.bette
    bun run migrate
    ```
 
-5. Rode a API:
+5. (Opcional) Popule o banco com dados de teste — 1 supervisor, 2 funcionários e alguns turnos:
+
+   ```bash
+   bun run seed
+   ```
+
+   O script imprime as credenciais criadas (senha `password123` para todos). É idempotente: rodar de novo reaproveita os usuários já existentes em vez de duplicar.
+
+6. Rode a API:
 
    ```bash
    bun run dev
@@ -45,7 +53,11 @@ export BETTER_AUTH_SECRET=$(openssl rand -base64 32)
 docker compose up --build
 ```
 
-O container da API roda as migrations (Better Auth + domínio) automaticamente antes de iniciar o servidor.
+O container da API roda as migrations (Better Auth + domínio) automaticamente antes de iniciar o servidor. Pra popular com dados de teste depois que os containers estiverem de pé:
+
+```bash
+docker compose exec api bun run seed
+```
 
 ## Endpoints
 

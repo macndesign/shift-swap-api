@@ -9,7 +9,8 @@
     "auth:generate": "bunx @better-auth/cli generate",
     "migrate:auth": "bun run scripts/migrate-auth.ts",
     "db:migrate": "bun run scripts/migrate-domain.ts",
-    "migrate": "bun run migrate:auth && bun run db:migrate"
+    "migrate": "bun run migrate:auth && bun run db:migrate",
+    "seed": "bun run scripts/seed.ts"
   },
   "devDependencies": {
     "@better-auth/cli": "^1.4.21",
