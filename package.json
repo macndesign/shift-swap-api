@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "better-auth": "^1.7.6",
+    "hono": "^4.13.9",
     "pg": "^8.23.0"
   }
 }
