@@ -12,3 +12,11 @@ CREATE TABLE IF NOT EXISTS supervisor (
   name TEXT NOT NULL,
   email TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS turno (
+  id TEXT PRIMARY KEY,
+  data TEXT NOT NULL,
+  hora_inicio TEXT NOT NULL,
+  hora_fim TEXT NOT NULL,
+  funcionario_id TEXT NOT NULL REFERENCES funcionario (id) ON DELETE CASCADE
+);

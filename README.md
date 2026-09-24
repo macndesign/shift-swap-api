@@ -53,6 +53,7 @@ O container da API roda as migrations (Better Auth + domínio) automaticamente a
 - `POST /api/auth/sign-up/email` — cria um usuário. O corpo deve incluir `email`, `password`, `name` e `role` (`"SUPERVISOR"` ou `"EMPLOYEE"`), este último obrigatório para diferenciar os dois tipos de usuário.
 - `POST /api/auth/sign-in/email` — login.
 - Demais rotas expostas pelo Better Auth ficam sob o prefixo `/api/auth/*` (ver [documentação](https://www.better-auth.com/docs)).
+- `GET /turnos` — rota privada, exige sessão autenticada e `role` `SUPERVISOR` (401 sem sessão, 403 se for `EMPLOYEE`). Lista todos os turnos via `ListarTurnosUseCase`.
 
 ## Domínio (biblioteca [`shift-swap`](https://github.com/macndesign/shift-swap))
 
@@ -60,7 +61,7 @@ As regras de negócio de troca de turnos vêm da lib `shift-swap` (entidades, us
 
 No signup, um hook do Better Auth (`databaseHooks.user.create.after` em [src/lib/auth.ts](src/lib/auth.ts)) chama `CriarSupervisorUseCase` ou `CriarFuncionarioUseCase` de acordo com o `role` escolhido, reaproveitando o mesmo `id` do usuário autenticado — então `FuncionarioEntity.id === user.id` (ou `SupervisorEntity.id === user.id`), sem tabela de vínculo extra. As tabelas `funcionario`/`supervisor` (schema em [src/db/schema.sql](src/db/schema.sql)) referenciam `user.id` com `ON DELETE CASCADE`.
 
-Os demais use-cases da lib (turnos, solicitações de troca) ainda não têm rotas na API — só a integração do signup foi conectada até aqui.
+A tabela `turno` (schema em [src/db/schema.sql](src/db/schema.sql)) referencia `funcionario.id`. Os demais use-cases da lib (criação de turno, solicitações de troca) ainda não têm rotas na API — só signup e `GET /turnos` foram conectados até aqui.
 
 ## Integração com o frontend
 
