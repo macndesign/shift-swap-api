@@ -8,6 +8,7 @@
         "better-auth": "^1.7.6",
         "hono": "^4.13.9",
         "pg": "^8.23.0",
+        "shift-swap": "^0.1.2",
       },
       "devDependencies": {
         "@better-auth/cli": "^1.4.21",
@@ -383,6 +384,8 @@
     "semver": ["semver@7.8.5", "", { "bin": { "semver": "bin/semver.js" } }, "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA=="],
 
     "set-cookie-parser": ["set-cookie-parser@3.1.2", "", {}, "sha512-5/r/lTwbJ3zQ+qwdUFZYeRNqda7P5HD8zQKqlSjdGt1/S0cjLAphHusj4Y58ahDtWn/g32xrIS58/ikOvwl0Lw=="],
+
+    "shift-swap": ["shift-swap@0.1.2", "", {}, "sha512-jeEARP/FHpax5+DsQQvGk+wtk6c0Y+tV74y2rEH/EidadFq5UXT5Bgfg0UmsDYWLvyS8ZidGwq1WYbQRKldHyg=="],
 
     "simple-concat": ["simple-concat@1.0.1", "", {}, "sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q=="],
 

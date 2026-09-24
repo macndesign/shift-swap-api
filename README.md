@@ -22,10 +22,10 @@ API de troca de plantões com autenticação via [Better Auth](https://www.bette
    docker compose up -d postgres
    ```
 
-4. Aplique o schema do Better Auth no banco:
+4. Aplique o schema do Better Auth e o schema de domínio (tabelas `funcionario`/`supervisor`) no banco:
 
    ```bash
-   bun run auth:migrate
+   bun run migrate
    ```
 
 5. Rode a API:
@@ -45,7 +45,7 @@ export BETTER_AUTH_SECRET=$(openssl rand -base64 32)
 docker compose up --build
 ```
 
-O container da API roda a migration do Better Auth automaticamente antes de iniciar o servidor.
+O container da API roda as migrations (Better Auth + domínio) automaticamente antes de iniciar o servidor.
 
 ## Endpoints
 
@@ -53,6 +53,14 @@ O container da API roda a migration do Better Auth automaticamente antes de inic
 - `POST /api/auth/sign-up/email` — cria um usuário. O corpo deve incluir `email`, `password`, `name` e `role` (`"SUPERVISOR"` ou `"EMPLOYEE"`), este último obrigatório para diferenciar os dois tipos de usuário.
 - `POST /api/auth/sign-in/email` — login.
 - Demais rotas expostas pelo Better Auth ficam sob o prefixo `/api/auth/*` (ver [documentação](https://www.better-auth.com/docs)).
+
+## Domínio (biblioteca [`shift-swap`](https://github.com/macndesign/shift-swap))
+
+As regras de negócio de troca de turnos vêm da lib `shift-swap` (entidades, use-cases e ports, sem I/O próprio). A API implementa os repositórios (`Pg*Repository` em [src/lib/shift-swap](src/lib/shift-swap)) e monta os use-cases já prontos para uso em [src/lib/shift-swap/index.ts](src/lib/shift-swap/index.ts).
+
+No signup, um hook do Better Auth (`databaseHooks.user.create.after` em [src/lib/auth.ts](src/lib/auth.ts)) chama `CriarSupervisorUseCase` ou `CriarFuncionarioUseCase` de acordo com o `role` escolhido, reaproveitando o mesmo `id` do usuário autenticado — então `FuncionarioEntity.id === user.id` (ou `SupervisorEntity.id === user.id`), sem tabela de vínculo extra. As tabelas `funcionario`/`supervisor` (schema em [src/db/schema.sql](src/db/schema.sql)) referenciam `user.id` com `ON DELETE CASCADE`.
+
+Os demais use-cases da lib (turnos, solicitações de troca) ainda não têm rotas na API — só a integração do signup foi conectada até aqui.
 
 ## Integração com o frontend
 
