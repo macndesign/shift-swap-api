@@ -2,8 +2,8 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { auth } from "./lib/auth";
 import { requireAuth, requireSupervisor } from "./lib/session-middleware";
-import { criarTurno, listarTurnos, listarTurnosPorFuncionarioEData } from "./lib/shift-swap";
-import { toTurnoDTO } from "./lib/shift-swap/dto";
+import { criarTurno, listarFuncionarios, listarTurnos, listarTurnosPorFuncionarioEData } from "./lib/shift-swap";
+import { toFuncionarioDTO, toTurnoDTO } from "./lib/shift-swap/dto";
 
 const port = Number(process.env.PORT ?? 3000);
 
@@ -60,6 +60,16 @@ app.post("/turnos", requireAuth, requireSupervisor, async (c) => {
   }
 
   return c.json({ turno: toTurnoDTO(result.getValue()) }, 201);
+});
+
+app.get("/funcionarios", requireAuth, requireSupervisor, async (c) => {
+  const result = await listarFuncionarios.execute();
+
+  if (result.isFailure) {
+    return c.json({ error: result.error }, 500);
+  }
+
+  return c.json({ funcionarios: result.getValue().map(toFuncionarioDTO) });
 });
 
 app.get("/turnos/me", requireAuth, async (c) => {

@@ -1,4 +1,4 @@
-import type { Turno } from "shift-swap";
+import type { FuncionarioEntity, Turno } from "shift-swap";
 
 export function toTurnoDTO(turno: Turno) {
   return {
@@ -7,5 +7,13 @@ export function toTurnoDTO(turno: Turno) {
     horaInicio: turno.horaInicio,
     horaFim: turno.horaFim,
     funcionarioId: turno.funcionarioId,
+  };
+}
+
+export function toFuncionarioDTO(funcionario: FuncionarioEntity) {
+  return {
+    id: funcionario.id,
+    name: funcionario.name.value,
+    email: funcionario.email.value,
   };
 }

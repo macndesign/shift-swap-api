@@ -68,6 +68,7 @@ docker compose exec api bun run seed
 - `GET /turnos` — rota privada, exige sessão autenticada e `role` `SUPERVISOR` (401 sem sessão, 403 se for `EMPLOYEE`). Lista todos os turnos via `ListarTurnosUseCase`.
 - `POST /turnos` — rota privada, só `SUPERVISOR` (401/403 iguais à rota acima). Corpo: `{ data, horaInicio, horaFim, funcionarioId }` (todos obrigatórios). Cria o turno via `CriarTurnoUseCase` e retorna 201; erro de validação de negócio (ex.: horário inválido) retorna 400.
 - `GET /turnos/me?data=YYYY-MM-DD` — rota privada, exige sessão autenticada (qualquer `role`). Lista os turnos do próprio usuário logado (`funcionarioId` vem da sessão, nunca da query) na data informada, via `ListarTurnosPorFuncionarioEDataUseCase`. Retorna 400 se `data` não for informado.
+- `GET /funcionarios` — rota privada, só `SUPERVISOR` (401/403 iguais às rotas de turno). Lista todos os funcionários via `ListarFuncionariosUseCase`.
 
 ## Domínio (biblioteca [`shift-swap`](https://github.com/macndesign/shift-swap))
 

@@ -2,6 +2,7 @@ import {
   CriarFuncionarioUseCase,
   CriarSupervisorUseCase,
   CriarTurnoUseCase,
+  ListarFuncionariosUseCase,
   ListarTurnosPorFuncionarioEDataUseCase,
   ListarTurnosUseCase,
 } from "shift-swap";
@@ -16,6 +17,7 @@ const turnoRepository = new PgTurnoRepository(pool);
 
 export const criarFuncionario = new CriarFuncionarioUseCase(funcionarioRepository);
 export const criarSupervisor = new CriarSupervisorUseCase(supervisorRepository);
+export const listarFuncionarios = new ListarFuncionariosUseCase(funcionarioRepository);
 export const listarTurnos = new ListarTurnosUseCase(turnoRepository);
 export const listarTurnosPorFuncionarioEData = new ListarTurnosPorFuncionarioEDataUseCase(turnoRepository);
 export const criarTurno = new CriarTurnoUseCase(turnoRepository);
